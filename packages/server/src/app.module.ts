@@ -1,10 +1,14 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration from './config/configuration';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { HealthModule } from './modules/health/health.module';
 import * as Joi from 'joi';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
+const configService = new ConfigService();
+
 
 @Module({
   imports: [
@@ -27,6 +31,16 @@ import * as Joi from 'joi';
           )
           .default('development'),
       }),
+    }),
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: configService.get<string>('DB_HOST'),
+      port: configService.get<number>('DB_PORT'),
+      username: configService.get<string>('DB_USER'),
+      password: configService.get<string>('DB_PASS'),
+      database: configService.get<string>('DB_NAME'),
+      // entities: [],
+      synchronize: true,
     }),
   ],
   controllers: [AppController],
