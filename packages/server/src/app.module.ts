@@ -9,7 +9,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 const configService = new ConfigService();
 
-
 @Module({
   imports: [
     HealthModule,
@@ -30,6 +29,11 @@ const configService = new ConfigService();
             'provisional',
           )
           .default('development'),
+        DB_USER: Joi.string().required(),
+        DB_HOST: Joi.string().required(),
+        DB_PORT: Joi.number().required(),
+        DB_PASS: Joi.string().required(),
+        DB_NAME: Joi.string().required(),
       }),
     }),
     TypeOrmModule.forRoot({
